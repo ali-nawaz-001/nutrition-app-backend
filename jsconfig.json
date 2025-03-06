@@ -3,6 +3,11 @@
     "moduleResolution": "nodenext",
     "target": "ES2021",
     "checkJs": true,
-    "allowJs": true
-  }
+    "allowJs": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "exclude": ["node_modules", "build"]
 }
