@@ -65,10 +65,6 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "age": {
-      "type": "integer",
-      "required": true
-    },
     "weight": {
       "type": "decimal",
       "required": true
@@ -84,6 +80,34 @@
         "Female"
       ],
       "required": true
+    },
+    "dob": {
+      "type": "date"
+    },
+    "goal": {
+      "type": "enumeration",
+      "enum": [
+        "Lose weight & increase stamina",
+        "Maintain weight for health",
+        "Gain weight for building muscle"
+      ]
+    },
+    "dietPreferences": {
+      "type": "enumeration",
+      "enum": [
+        "vegetarian",
+        "keto",
+        "low carb",
+        "gluten free",
+        "pescatarian",
+        "no restrictions"
+      ]
+    },
+    "cookingPreferences": {
+      "type": "json"
+    },
+    "favouriteCuisine": {
+      "type": "json"
     }
   }
 }

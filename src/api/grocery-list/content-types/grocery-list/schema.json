@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "grocery_lists",
+  "info": {
+    "singularName": "grocery-list",
+    "pluralName": "grocery-lists",
+    "displayName": "groceryList"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "userID": {
+      "type": "integer",
+      "required": true
+    }
+  }
+}

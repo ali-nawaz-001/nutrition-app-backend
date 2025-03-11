@@ -1,4 +1,5 @@
 module.exports = (plugin) => {
+    //update profile of user
     plugin.controllers.user.updateProfile = async (ctx) => {
         if (!ctx.state.user || !ctx.state.user.id) {
             ctx.response.status = 401;
