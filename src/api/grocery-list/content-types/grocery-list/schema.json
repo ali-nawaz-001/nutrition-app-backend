@@ -4,15 +4,24 @@
   "info": {
     "singularName": "grocery-list",
     "pluralName": "grocery-lists",
-    "displayName": "groceryList"
+    "displayName": "groceryList",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
   },
   "attributes": {
-    "userID": {
-      "type": "integer",
-      "required": true
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "grocery_list"
+    },
+    "ingredients": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::ingredient.ingredient",
+      "mappedBy": "grocery_list"
     }
   }
 }

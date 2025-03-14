@@ -4,7 +4,7 @@ module.exports = (plugin) => {
         if (!ctx.state.user || !ctx.state.user.id) {
             ctx.response.status = 401;
             ctx.response.body = { error: "Unauthorized" };
-            return;
+            return;                                                                                              
         }
 
         try {
@@ -25,7 +25,7 @@ module.exports = (plugin) => {
         method: "PUT",
         path: "/user/profile",
         handler: "user.updateProfile",
-        config: {
+        config: {      
             prefix: "",
             policies: [],
         },

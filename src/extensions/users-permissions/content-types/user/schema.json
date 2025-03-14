@@ -108,6 +108,12 @@
     },
     "favouriteCuisine": {
       "type": "json"
+    },
+    "grocery_list": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::grocery-list.grocery-list",
+      "mappedBy": "user"
     }
   }
 }

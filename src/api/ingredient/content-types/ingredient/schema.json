@@ -11,18 +11,21 @@
     "draftAndPublish": true
   },
   "attributes": {
-    "name": {
+    "Name": {
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": false
     },
     "quantity": {
-      "type": "integer",
       "required": true,
-      "min": 0
+      "min": 0,
+      "type": "integer"
     },
-    "groceryListID": {
-      "type": "integer",
-      "required": true
+    "grocery_list": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::grocery-list.grocery-list",
+      "inversedBy": "ingredients"
     }
   }
 }

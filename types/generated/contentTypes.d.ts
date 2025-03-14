@@ -372,6 +372,7 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiGroceryListGroceryList extends Struct.CollectionTypeSchema {
   collectionName: 'grocery_lists';
   info: {
+    description: '';
     displayName: 'groceryList';
     pluralName: 'grocery-lists';
     singularName: 'grocery-list';
@@ -383,6 +384,10 @@ export interface ApiGroceryListGroceryList extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    ingredients: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::ingredient.ingredient'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -393,7 +398,10 @@ export interface ApiGroceryListGroceryList extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    userID: Schema.Attribute.Integer & Schema.Attribute.Required;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -412,14 +420,17 @@ export interface ApiIngredientIngredient extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    groceryListID: Schema.Attribute.Integer & Schema.Attribute.Required;
+    grocery_list: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::grocery-list.grocery-list'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::ingredient.ingredient'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String & Schema.Attribute.Required;
+    Name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     quantity: Schema.Attribute.Integer &
       Schema.Attribute.Required &
@@ -429,6 +440,35 @@ export interface ApiIngredientIngredient extends Struct.CollectionTypeSchema {
         },
         number
       >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiRecommendationRecommendation
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'recommendations';
+  info: {
+    displayName: 'recommendation';
+    pluralName: 'recommendations';
+    singularName: 'recommendation';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::recommendation.recommendation'
+    > &
+      Schema.Attribute.Private;
+    Name: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -925,6 +965,10 @@ export interface PluginUsersPermissionsUser
         'Gain weight for building muscle',
       ]
     >;
+    grocery_list: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::grocery-list.grocery-list'
+    >;
     height: Schema.Attribute.Decimal & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -969,6 +1013,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::grocery-list.grocery-list': ApiGroceryListGroceryList;
       'api::ingredient.ingredient': ApiIngredientIngredient;
+      'api::recommendation.recommendation': ApiRecommendationRecommendation;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
