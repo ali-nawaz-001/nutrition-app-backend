@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "recipes",
+  "info": {
+    "singularName": "recipe",
+    "pluralName": "recipes",
+    "displayName": "recipe"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "level": {
+      "type": "enumeration",
+      "enum": [
+        "Easy",
+        "Medium",
+        "Hard"
+      ]
+    },
+    "time": {
+      "type": "integer"
+    },
+    "image": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "text"
+    },
+    "nutrition": {
+      "type": "json"
+    },
+    "ingredients": {
+      "type": "json"
+    },
+    "instructions": {
+      "type": "json"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "recipes"
+    }
+  }
+}

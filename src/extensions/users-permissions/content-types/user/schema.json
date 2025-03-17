@@ -114,6 +114,12 @@
       "relation": "oneToOne",
       "target": "api::grocery-list.grocery-list",
       "mappedBy": "user"
+    },
+    "recipes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::recipe.recipe",
+      "mappedBy": "user"
     }
   }
 }

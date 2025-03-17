@@ -446,6 +446,45 @@ export interface ApiIngredientIngredient extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiRecipeRecipe extends Struct.CollectionTypeSchema {
+  collectionName: 'recipes';
+  info: {
+    displayName: 'recipe';
+    pluralName: 'recipes';
+    singularName: 'recipe';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    image: Schema.Attribute.String;
+    ingredients: Schema.Attribute.JSON;
+    instructions: Schema.Attribute.JSON;
+    level: Schema.Attribute.Enumeration<['Easy', 'Medium', 'Hard']>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::recipe.recipe'
+    > &
+      Schema.Attribute.Private;
+    nutrition: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    summary: Schema.Attribute.Text;
+    time: Schema.Attribute.Integer;
+    title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiRecommendationRecommendation
   extends Struct.CollectionTypeSchema {
   collectionName: 'recommendations';
@@ -983,6 +1022,7 @@ export interface PluginUsersPermissionsUser
       }>;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    recipes: Schema.Attribute.Relation<'oneToMany', 'api::recipe.recipe'>;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
     role: Schema.Attribute.Relation<
       'manyToOne',
@@ -1013,6 +1053,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::grocery-list.grocery-list': ApiGroceryListGroceryList;
       'api::ingredient.ingredient': ApiIngredientIngredient;
+      'api::recipe.recipe': ApiRecipeRecipe;
       'api::recommendation.recommendation': ApiRecommendationRecommendation;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
