@@ -4,7 +4,8 @@
   "info": {
     "singularName": "recipe",
     "pluralName": "recipes",
-    "displayName": "recipe"
+    "displayName": "recipe",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -39,11 +40,23 @@
     "instructions": {
       "type": "json"
     },
-    "user": {
+    "save_recipe": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "recipes"
+      "relation": "oneToOne",
+      "target": "api::save-recipe.save-recipe",
+      "mappedBy": "recipe"
+    },
+    "meal_plans": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::meal-plan.meal-plan",
+      "mappedBy": "dinner"
+    },
+    "feedbacks": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::feedback.feedback",
+      "mappedBy": "recipe"
     }
   }
 }

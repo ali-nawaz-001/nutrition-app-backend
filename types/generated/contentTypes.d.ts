@@ -369,6 +369,47 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiFeedbackFeedback extends Struct.CollectionTypeSchema {
+  collectionName: 'feedbacks';
+  info: {
+    displayName: 'feedback';
+    pluralName: 'feedbacks';
+    singularName: 'feedback';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::feedback.feedback'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    recipe: Schema.Attribute.Relation<'manyToMany', 'api::recipe.recipe'>;
+    star: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 5;
+          min: 0;
+        },
+        number
+      >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiGroceryListGroceryList extends Struct.CollectionTypeSchema {
   collectionName: 'grocery_lists';
   info: {
@@ -446,9 +487,47 @@ export interface ApiIngredientIngredient extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiMealPlanMealPlan extends Struct.CollectionTypeSchema {
+  collectionName: 'meal_plans';
+  info: {
+    description: '';
+    displayName: 'MealPlan';
+    pluralName: 'meal-plans';
+    singularName: 'meal-plan';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    breakfast: Schema.Attribute.Relation<'manyToMany', 'api::recipe.recipe'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.Date & Schema.Attribute.Unique;
+    dinner: Schema.Attribute.Relation<'manyToMany', 'api::recipe.recipe'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::meal-plan.meal-plan'
+    > &
+      Schema.Attribute.Private;
+    lunch: Schema.Attribute.Relation<'manyToMany', 'api::recipe.recipe'>;
+    publishedAt: Schema.Attribute.DateTime;
+    snack: Schema.Attribute.Relation<'manyToMany', 'api::recipe.recipe'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiRecipeRecipe extends Struct.CollectionTypeSchema {
   collectionName: 'recipes';
   info: {
+    description: '';
     displayName: 'recipe';
     pluralName: 'recipes';
     singularName: 'recipe';
@@ -460,6 +539,10 @@ export interface ApiRecipeRecipe extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    feedbacks: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::feedback.feedback'
+    >;
     image: Schema.Attribute.String;
     ingredients: Schema.Attribute.JSON;
     instructions: Schema.Attribute.JSON;
@@ -470,18 +553,22 @@ export interface ApiRecipeRecipe extends Struct.CollectionTypeSchema {
       'api::recipe.recipe'
     > &
       Schema.Attribute.Private;
+    meal_plans: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::meal-plan.meal-plan'
+    >;
     nutrition: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
+    save_recipe: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::save-recipe.save-recipe'
+    >;
     summary: Schema.Attribute.Text;
     time: Schema.Attribute.Integer;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<
-      'manyToOne',
-      'plugin::users-permissions.user'
-    >;
   };
 }
 
@@ -511,6 +598,38 @@ export interface ApiRecommendationRecommendation
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSaveRecipeSaveRecipe extends Struct.CollectionTypeSchema {
+  collectionName: 'save_recipes';
+  info: {
+    displayName: 'saveRecipe';
+    pluralName: 'save-recipes';
+    singularName: 'save-recipe';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::save-recipe.save-recipe'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    recipe: Schema.Attribute.Relation<'oneToOne', 'api::recipe.recipe'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -995,6 +1114,7 @@ export interface PluginUsersPermissionsUser
         minLength: 6;
       }>;
     favouriteCuisine: Schema.Attribute.JSON;
+    feedbacks: Schema.Attribute.Relation<'oneToMany', 'api::feedback.feedback'>;
     gender: Schema.Attribute.Enumeration<['Male', 'Female']> &
       Schema.Attribute.Required;
     goal: Schema.Attribute.Enumeration<
@@ -1015,6 +1135,10 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    meal_plans: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::meal-plan.meal-plan'
+    >;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
@@ -1022,11 +1146,14 @@ export interface PluginUsersPermissionsUser
       }>;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    recipes: Schema.Attribute.Relation<'oneToMany', 'api::recipe.recipe'>;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
     role: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.role'
+    >;
+    save_recipes: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::save-recipe.save-recipe'
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1051,10 +1178,13 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::feedback.feedback': ApiFeedbackFeedback;
       'api::grocery-list.grocery-list': ApiGroceryListGroceryList;
       'api::ingredient.ingredient': ApiIngredientIngredient;
+      'api::meal-plan.meal-plan': ApiMealPlanMealPlan;
       'api::recipe.recipe': ApiRecipeRecipe;
       'api::recommendation.recommendation': ApiRecommendationRecommendation;
+      'api::save-recipe.save-recipe': ApiSaveRecipeSaveRecipe;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

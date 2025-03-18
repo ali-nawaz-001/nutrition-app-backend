@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "save_recipes",
+  "info": {
+    "singularName": "save-recipe",
+    "pluralName": "save-recipes",
+    "displayName": "saveRecipe"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "save_recipes"
+    },
+    "recipe": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::recipe.recipe",
+      "inversedBy": "save_recipe"
+    }
+  }
+}

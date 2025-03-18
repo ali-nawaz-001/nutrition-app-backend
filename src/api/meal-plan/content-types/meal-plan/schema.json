@@ -1,0 +1,49 @@
+{
+  "kind": "collectionType",
+  "collectionName": "meal_plans",
+  "info": {
+    "singularName": "meal-plan",
+    "pluralName": "meal-plans",
+    "displayName": "MealPlan",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "date": {
+      "type": "date",
+      "unique": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "meal_plans"
+    },
+    "breakfast": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::recipe.recipe",
+      "inversedBy": "meal_plans"
+    },
+    "lunch": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::recipe.recipe",
+      "inversedBy": "meal_plans"
+    },
+    "dinner": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::recipe.recipe",
+      "inversedBy": "meal_plans"
+    },
+    "snack": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::recipe.recipe",
+      "inversedBy": "meal_plans"
+    }
+  }
+}

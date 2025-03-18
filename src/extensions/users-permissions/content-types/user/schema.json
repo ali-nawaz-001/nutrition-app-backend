@@ -115,10 +115,22 @@
       "target": "api::grocery-list.grocery-list",
       "mappedBy": "user"
     },
-    "recipes": {
+    "save_recipes": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::recipe.recipe",
+      "target": "api::save-recipe.save-recipe",
+      "mappedBy": "user"
+    },
+    "meal_plans": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::meal-plan.meal-plan",
+      "mappedBy": "user"
+    },
+    "feedbacks": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::feedback.feedback",
       "mappedBy": "user"
     }
   }
