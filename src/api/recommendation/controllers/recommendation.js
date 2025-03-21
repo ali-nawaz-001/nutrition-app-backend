@@ -4,15 +4,14 @@ const axios = require('axios');
 module.exports = createCoreController('api::recommendation.recommendation', ({ strapi }) => ({
     // Fetch recommended recipes from Spoonacular
     async recommend(ctx) {
-        const { time, calories,ingredients } = ctx.query;
+        const { time, calories, minServings, cuisine, ingredients } = ctx.query;
 
         if (!time || !calories || !ingredients) {
             return ctx.badRequest("Time, calories, and ingredients are required");
         }
-
         try {
             const API_KEY = '788845b5c63b4b468d2a00e0343109f2';
-            const url = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&maxReadyTime=${time}&maxCalories=${calories}&ingredients=${ingredients}&addRecipeInformation=true&number=3`;
+            const url = `https://api.spoonacular.com/recipes/complexSearch?apiKey=${API_KEY}&maxReadyTime=${time}&maxCalories=${calories}&ingredients=${ingredients}&addRecipeInformation=true&number=3&minServings=${minServings}&cuisine=${cuisine}`;
             
             const response = await axios.get(url);
             const res=response.data.results;
@@ -33,7 +32,7 @@ module.exports = createCoreController('api::recommendation.recommendation', ({ s
         const { id } = ctx.query;
 
         if (!id) {
-            return ctx.badRequest("Recipe ID is required");
+            return ctx.badRequest("Recipe ID is required");                                                                                                                                                                                 
         }
 
         try {
