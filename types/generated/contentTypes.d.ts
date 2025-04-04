@@ -473,7 +473,7 @@ export interface ApiIngredientIngredient extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     Name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    quantity: Schema.Attribute.Integer &
+    quantity: Schema.Attribute.Decimal &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMax<
         {
@@ -500,6 +500,13 @@ export interface ApiMealPlanMealPlan extends Struct.CollectionTypeSchema {
   };
   attributes: {
     breakfast: Schema.Attribute.Relation<'manyToMany', 'api::recipe.recipe'>;
+    calories: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

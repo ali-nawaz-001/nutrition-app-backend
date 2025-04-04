@@ -19,7 +19,7 @@
     "quantity": {
       "required": true,
       "min": 0,
-      "type": "integer"
+      "type": "decimal"
     },
     "grocery_list": {
       "type": "relation",

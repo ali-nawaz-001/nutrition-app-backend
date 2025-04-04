@@ -90,4 +90,135 @@ module.exports = createCoreController('api::recommendation.recommendation', ({ s
             return ctx.internalServerError("Failed to fetch recipe details", error);
         }
     },
+    async updateMealPlan(ctx) {
+        const { userId, recipeId } = ctx.query;
+      
+        if (!userId || !recipeId) {
+          return ctx.badRequest("User ID and Recipe ID are required");
+        }
+      
+        try {
+          const currentDate = new Date();
+          const formattedDate = currentDate.toISOString().split('T')[0];
+      
+          // 1. Check if meal plan exists for this user and date
+          const existingMealPlans = await strapi.entityService.findMany('api::meal-plan.meal-plan', {
+            filters: {
+              user: { id: userId },
+              date: formattedDate
+            },
+            populate: '*'
+          });
+      
+          let mealPlan;
+      
+          if (existingMealPlans.length > 0) {
+            // Meal plan exists
+            console.log("Meal plan exists for this user and date");
+            mealPlan = existingMealPlans[0];
+          } else {
+            // 2. Create a new meal plan
+            console.log("Creating new meal plan for this user and date");
+            mealPlan = await strapi.entityService.create('api::meal-plan.meal-plan', {
+              data: {
+                date: formattedDate,
+                user: userId,
+                calories: 0,
+              },
+              populate: '*'
+            });
+          }
+
+          const recipe = await strapi.entityService.findOne('api::recipe.recipe', recipeId);
+          if (!recipe) {
+            return ctx.notFound("Recipe not found");
+          }
+          const RecipeCalories = recipe.nutrition.calories.amount;
+          const ingredients = recipe.ingredients.map((ing) => ({
+            name: ing.name,
+            amount: ing.amount,
+            unit: ing.unit,
+          }));
+          const groceryIngredients = await strapi.entityService.findMany('api::ingredient.ingredient', {
+            filters: {
+              grocery_list: {
+                user: { id: userId }
+              }
+            }
+          });
+          const groceryMap = new Map();
+            groceryIngredients.forEach((item) => {
+            groceryMap.set(item.Name.toLowerCase(), item);
+          });
+          for (const recipeIng of ingredients) {
+            const name = recipeIng.name.toLowerCase();
+            const matchedGrocery = groceryMap.get(name);
+        
+            if (matchedGrocery) {
+              const newQuantity = matchedGrocery.quantity - recipeIng.amount;
+      
+              await strapi.entityService.update('api::ingredient.ingredient', matchedGrocery.id, {
+                data: {
+                  quantity: newQuantity > 0 ? newQuantity : 0
+                }
+              });
+            }
+          }
+            // 3. Add recipe to meal plan
+            const currentHour = currentDate.getHours();
+            let mealSlot = '';
+
+            if (currentHour >= 5 && currentHour < 10) {
+                mealSlot = 'breakfast';
+                mealPlan=await strapi.entityService.update('api::meal-plan.meal-plan', mealPlan.id,{
+                    data: {
+                        breakfast: recipe,
+                        calories:RecipeCalories+mealPlan.calories
+                    },
+                    populate: '*'
+                });
+            } else if (currentHour >= 10 && currentHour < 12) {
+                mealSlot = 'snack';
+                mealPlan=await strapi.entityService.update('api::meal-plan.meal-plan', mealPlan.id,{
+                    data: {
+                        snack: recipe,
+                        calories:RecipeCalories+mealPlan.calories
+                    },
+                    populate: '*'
+                });
+            } else if (currentHour >= 12 && currentHour < 15) {
+                mealSlot = 'lunch';
+                mealPlan=await strapi.entityService.update('api::meal-plan.meal-plan', mealPlan.id,{
+                    data: {
+                        lunch: recipe,
+                        calories:RecipeCalories+mealPlan.calories
+                    },
+                    populate: '*'
+                });
+            } else if (currentHour >= 15 && currentHour < 22) {
+                mealSlot = 'dinner';
+                mealPlan=await strapi.entityService.update('api::meal-plan.meal-plan', mealPlan.id,{
+                    data: {
+                        dinner: recipe,
+                        calories:RecipeCalories+mealPlan.calories
+                    },
+                    populate: '*'
+                });
+            } else {
+                mealSlot = 'dinner';
+                mealPlan=await strapi.entityService.update('api::meal-plan.meal-plan', mealPlan.id,{
+                    data: {
+                        dinner: recipe,
+                        calories:RecipeCalories+mealPlan.calories
+                    },
+                    populate: '*'
+                });
+            }
+          return ctx.send({ message: "Meal plan checked or created", mealPlan });
+      
+        } catch (error) {
+          console.error(error);
+          return ctx.internalServerError("Failed to update meal plan", { error });
+        }
+    }      
 }));

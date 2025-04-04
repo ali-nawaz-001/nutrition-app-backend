@@ -50,7 +50,7 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::meal-plan.meal-plan",
-      "mappedBy": "dinner"
+      "mappedBy": "snack"
     },
     "feedbacks": {
       "type": "relation",

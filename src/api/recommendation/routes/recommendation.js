@@ -16,5 +16,13 @@ module.exports = {
           auth: false,
         },
       },
+      {
+        method: "POST",
+        path: "/updateMealPlan",
+        handler: "recommendation.updateMealPlan",
+        config: {
+          auth: false,
+        },
+      },
     ],
   };  

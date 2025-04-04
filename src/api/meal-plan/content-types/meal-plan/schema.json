@@ -44,6 +44,10 @@
       "relation": "manyToMany",
       "target": "api::recipe.recipe",
       "inversedBy": "meal_plans"
+    },
+    "calories": {
+      "type": "decimal",
+      "min": 0
     }
   }
 }
